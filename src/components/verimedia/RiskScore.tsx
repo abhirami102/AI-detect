@@ -69,7 +69,7 @@ export function RiskScore({ score }: { score: ScoreResult }) {
   );
 }
 
-export function VerdictBands({ current }: { current: string }) {
+export function VerdictBands({ current }: { current?: string }) {
   const bands = [
     { range: "0–25", name: "Likely Authentic" },
     { range: "26–50", name: "Mostly Authentic" },
