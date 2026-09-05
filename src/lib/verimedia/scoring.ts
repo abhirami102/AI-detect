@@ -85,7 +85,9 @@ export function calculateScore(components: Record<EvidenceSource, ComponentResul
 
   return {
     syntheticMediaRisk,
-    verdict: verdictFor(syntheticMediaRisk),
+    // With no component available there is nothing to judge: report uncertainty
+    // rather than letting the neutral placeholder read as a leaning verdict.
+    verdict: available.length === 0 ? "Uncertain" : verdictFor(syntheticMediaRisk),
     confidence,
     breakdown,
     renormalized,
