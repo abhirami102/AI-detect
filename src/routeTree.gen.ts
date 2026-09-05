@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as MethodRouteImport } from './routes/method'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const MethodRoute = MethodRouteImport.update({
   path: '/method',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportIdRoute = ReportIdRouteImport.update({
   id: '/report/$id',
   path: '/report/$id',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/method': typeof MethodRoute
+  '/reports': typeof ReportsRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/method': typeof MethodRoute
+  '/reports': typeof ReportsRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/method': typeof MethodRoute
+  '/reports': typeof ReportsRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze' | '/method' | '/report/$id'
+  fullPaths: '/' | '/analyze' | '/method' | '/reports' | '/report/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze' | '/method' | '/report/$id'
-  id: '__root__' | '/' | '/analyze' | '/method' | '/report/$id'
+  to: '/' | '/analyze' | '/method' | '/reports' | '/report/$id'
+  id: '__root__' | '/' | '/analyze' | '/method' | '/reports' | '/report/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyzeRoute: typeof AnalyzeRoute
   MethodRoute: typeof MethodRoute
+  ReportsRoute: typeof ReportsRoute
   ReportIdRoute: typeof ReportIdRoute
 }
 
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MethodRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/report/$id': {
       id: '/report/$id'
       path: '/report/$id'
@@ -106,6 +123,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyzeRoute: AnalyzeRoute,
   MethodRoute: MethodRoute,
+  ReportsRoute: ReportsRoute,
   ReportIdRoute: ReportIdRoute,
 }
 export const routeTree = rootRouteImport
