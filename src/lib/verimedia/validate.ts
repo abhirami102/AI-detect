@@ -25,8 +25,8 @@ export interface FileValidation {
 
 export function sanitizeFilename(name: string): string {
   const base = name.split(/[/\\]/).pop() ?? "file";
+  // The allowlist below also removes control characters.
   const cleaned = base
-    .replace(/[\u0000-\u001f\u007f]/g, "")
     .replace(/[^A-Za-z0-9._-]/g, "_")
     .replace(/^\.+/, "")
     .replace(/_{2,}/g, "_");
