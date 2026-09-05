@@ -327,9 +327,9 @@ export function videoForensics(
 export function metadataEvidence(input: {
   hasExif: boolean;
   hasGps: boolean;
-  software?: string;
-  camera?: string;
-  createdAt?: string;
+  software?: string | undefined;
+  camera?: string | undefined;
+  createdAt?: string | undefined;
   kind: string;
   notes: string[];
 }): Evidence[] {
