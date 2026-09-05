@@ -57,7 +57,7 @@ function ReportsPage() {
                   className="clip-notch block border border-line bg-panel p-5 transition hover:border-signal"
                 >
                   <div className="flex flex-wrap items-center gap-4">
-                    <span className="font-display text-3xl font-black">{Math.round(r.score.score)}</span>
+                    <span className="font-display text-3xl font-black">{Math.round(r.score.syntheticMediaRisk)}</span>
                     <div className="min-w-0">
                       <p className="truncate font-display text-sm font-bold">{r.file.name}</p>
                       <p className="font-mono text-[10px] uppercase tracking-wide text-dim">
@@ -65,7 +65,7 @@ function ReportsPage() {
                       </p>
                     </div>
                     <span className="ml-auto">
-                      <Tag tone={r.score.score >= 60 ? "brand" : r.score.score >= 40 ? "signal" : "dim"}>
+                      <Tag tone={r.score.syntheticMediaRisk >= 60 ? "brand" : r.score.syntheticMediaRisk >= 40 ? "signal" : "dim"}>
                         {r.score.verdict}
                       </Tag>
                     </span>
