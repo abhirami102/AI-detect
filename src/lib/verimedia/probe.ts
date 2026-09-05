@@ -77,7 +77,9 @@ export async function probeAudio(file: Blob): Promise<AudioProbe> {
   }
 
   try {
-    const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    const Ctx =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!Ctx) return { durationSeconds: duration, decoded: false };
     const ctx = new Ctx();
     const buffer = await ctx.decodeAudioData(await file.arrayBuffer());
@@ -134,7 +136,10 @@ export async function probeVideo(file: Blob, frameCount = 3): Promise<VideoProbe
 
     const frames: string[] = [];
     const targets = Array.from({ length: frameCount }, (_, i) =>
-      Math.min(Math.max(duration * ((i + 1) / (frameCount + 1)), 0.05), Math.max(duration - 0.05, 0.05)),
+      Math.min(
+        Math.max(duration * ((i + 1) / (frameCount + 1)), 0.05),
+        Math.max(duration - 0.05, 0.05),
+      ),
     );
 
     for (const t of targets) {

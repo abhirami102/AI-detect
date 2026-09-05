@@ -71,7 +71,11 @@ export const analyzeWithGemini = createServerFn({ method: "POST" })
 
     for (const payload of data.payloads) {
       if (data.kind === "audio") {
-        const format = data.mime.includes("wav") ? "wav" : data.mime.includes("mp4") ? "m4a" : "mp3";
+        const format = data.mime.includes("wav")
+          ? "wav"
+          : data.mime.includes("mp4")
+            ? "m4a"
+            : "mp3";
         parts.push({ type: "input_audio", input_audio: { data: payload, format } });
       } else {
         const mime = data.kind === "video" ? "image/jpeg" : data.mime;
@@ -130,7 +134,10 @@ export const analyzeWithGemini = createServerFn({ method: "POST" })
     const content = json.choices?.[0]?.message?.content ?? "";
 
     try {
-      const cleaned = content.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+      const cleaned = content
+        .replace(/^```(?:json)?/i, "")
+        .replace(/```$/, "")
+        .trim();
       const parsed = JSON.parse(cleaned) as {
         observations?: GeminiObservation[];
         overallConfidence?: number;
@@ -141,7 +148,8 @@ export const analyzeWithGemini = createServerFn({ method: "POST" })
         message: "Semantic analysis completed.",
         model,
         observations: (parsed.observations ?? []).slice(0, 6),
-        overallConfidence: typeof parsed.overallConfidence === "number" ? parsed.overallConfidence : 0.5,
+        overallConfidence:
+          typeof parsed.overallConfidence === "number" ? parsed.overallConfidence : 0.5,
         limitations: parsed.limitations ?? [],
       };
     } catch {

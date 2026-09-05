@@ -19,7 +19,13 @@ export function Panel({
   );
 }
 
-export function SectionLabel({ children, tone = "brand" }: { children: ReactNode; tone?: "brand" | "signal" }) {
+export function SectionLabel({
+  children,
+  tone = "brand",
+}: {
+  children: ReactNode;
+  tone?: "brand" | "signal";
+}) {
   return (
     <div className="mb-5 flex items-center gap-3">
       <span className={`h-px w-10 ${tone === "brand" ? "bg-brand" : "bg-signal"}`} />
@@ -28,7 +34,13 @@ export function SectionLabel({ children, tone = "brand" }: { children: ReactNode
   );
 }
 
-export function Tag({ children, tone = "dim" }: { children: ReactNode; tone?: "dim" | "brand" | "signal" | "ink" }) {
+export function Tag({
+  children,
+  tone = "dim",
+}: {
+  children: ReactNode;
+  tone?: "dim" | "brand" | "signal" | "ink";
+}) {
   const tones = {
     dim: "text-dim border-line",
     brand: "text-brand border-brand/50",
@@ -36,7 +48,9 @@ export function Tag({ children, tone = "dim" }: { children: ReactNode; tone?: "d
     ink: "text-ink border-ink/40",
   } as const;
   return (
-    <span className={`h-fit shrink-0 border px-2 py-1 font-mono text-[9px] uppercase tracking-wide ${tones[tone]}`}>
+    <span
+      className={`h-fit shrink-0 border px-2 py-1 font-mono text-[9px] uppercase tracking-wide ${tones[tone]}`}
+    >
       {children}
     </span>
   );
@@ -47,11 +61,15 @@ export function SiteHeader() {
     <header className="flex items-center justify-between px-6 py-5 md:px-10">
       <Link to="/" className="flex items-center gap-3">
         <div className="clip-notch grid size-9 place-items-center bg-brand">
-          <span className="font-display text-sm font-black leading-none text-primary-foreground">VM</span>
+          <span className="font-display text-sm font-black leading-none text-primary-foreground">
+            VM
+          </span>
         </div>
         <div className="leading-none">
           <p className="font-display text-sm font-extrabold tracking-[0.14em]">VERIMEDIA&nbsp;AI</p>
-          <p className="mt-1 font-mono text-[10px] tracking-widest text-dim">SIGNAL&nbsp;·&nbsp;01</p>
+          <p className="mt-1 font-mono text-[10px] tracking-widest text-dim">
+            SIGNAL&nbsp;·&nbsp;01
+          </p>
         </div>
       </Link>
       <nav className="hidden items-center gap-7 font-mono text-xs uppercase tracking-wider text-dim md:flex">

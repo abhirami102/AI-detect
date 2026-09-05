@@ -14,7 +14,10 @@ export const Route = createFileRoute("/method")({
           "How VeriMedia AI scores media: four weighted components, deterministic aggregation, renormalisation for unavailable stages, and what the tool deliberately cannot claim.",
       },
       { property: "og:title", content: "Method & scoring — VeriMedia AI" },
-      { property: "og:description", content: "Deterministic weighted scoring, explained end to end." },
+      {
+        property: "og:description",
+        content: "Deterministic weighted scoring, explained end to end.",
+      },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -46,10 +49,14 @@ function MethodPage() {
             <ol className="mt-3 space-y-2">
               {STAGES.map((s, i) => (
                 <li key={s} className="flex gap-3 text-sm">
-                  <span className="font-mono text-[11px] text-signal">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-mono text-[11px] text-signal">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   <span className="text-dim">
-                    <span className="font-display font-bold uppercase tracking-wide text-foreground">{s}</span> —{" "}
-                    {stageCopy[s]}
+                    <span className="font-display font-bold uppercase tracking-wide text-foreground">
+                      {s}
+                    </span>{" "}
+                    — {stageCopy[s]}
                   </span>
                 </li>
               ))}
@@ -64,17 +71,23 @@ function MethodPage() {
                   <div key={k}>
                     <div className="flex justify-between font-mono text-[11px] uppercase tracking-wide">
                       <span className="text-dim">{SOURCE_LABELS[k]}</span>
-                      <span className="text-foreground">{Math.round(NOMINAL_WEIGHTS[k] * 100)}%</span>
+                      <span className="text-foreground">
+                        {Math.round(NOMINAL_WEIGHTS[k] * 100)}%
+                      </span>
                     </div>
                     <div className="mt-1 h-1.5 bg-line">
-                      <div className="h-full bg-brand" style={{ width: `${NOMINAL_WEIGHTS[k] * 100}%` }} />
+                      <div
+                        className="h-full bg-brand"
+                        style={{ width: `${NOMINAL_WEIGHTS[k] * 100}%` }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
               <p className="mt-4 text-xs leading-relaxed text-dim">
-                If a component cannot run, its weight is removed and the remaining weights are renormalised. An
-                unavailable stage never counts as a vote for authenticity, and it never counts as a vote against it.
+                If a component cannot run, its weight is removed and the remaining weights are
+                renormalised. An unavailable stage never counts as a vote for authenticity, and it
+                never counts as a vote against it.
               </p>
             </Panel>
             <Panel className="p-6">
@@ -103,11 +116,15 @@ function MethodPage() {
 }
 
 const stageCopy: Record<string, string> = {
-  Validate: "magic bytes are read from the file head; the browser-declared MIME type is never trusted.",
+  Validate:
+    "magic bytes are read from the file head; the browser-declared MIME type is never trusted.",
   Hash: "a SHA-256 digest is computed in-browser so the exact bytes analysed can be cited later.",
-  Metadata: "EXIF, ID3, RIFF and container boxes are parsed from the real bytes, with no inference from absence.",
-  Forensics: "measurable properties — dimensions, compression, levels, duration, geometry — are recorded as evidence.",
-  Gemini: "an optional semantic pass returns observations and interpretations; it has no authority over the score.",
+  Metadata:
+    "EXIF, ID3, RIFF and container boxes are parsed from the real bytes, with no inference from absence.",
+  Forensics:
+    "measurable properties — dimensions, compression, levels, duration, geometry — are recorded as evidence.",
+  Gemini:
+    "an optional semantic pass returns observations and interpretations; it has no authority over the score.",
   Web: "optional search grounding for corroborating context. Unavailable unless configured.",
   Score: "component risks are combined with fixed weights into a 0–100 score and a verdict band.",
 };

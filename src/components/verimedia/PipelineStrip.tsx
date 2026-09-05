@@ -3,13 +3,17 @@ import { STAGES, type StageState } from "@/lib/verimedia/pipeline";
 export function PipelineStrip({ states }: { states: StageState[] }) {
   const byStage = new Map(states.map((s) => [s.stage, s]));
   const runningIndex = STAGES.findIndex((s) => byStage.get(s)?.status === "running");
-  const doneCount = STAGES.filter((s) => ["done", "skipped"].includes(byStage.get(s)?.status ?? "")).length;
+  const doneCount = STAGES.filter((s) =>
+    ["done", "skipped"].includes(byStage.get(s)?.status ?? ""),
+  ).length;
   const current = runningIndex >= 0 ? runningIndex + 1 : doneCount;
 
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-dim">Analysis Pipeline</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-dim">
+          Analysis Pipeline
+        </p>
         <p className="font-mono text-[11px] uppercase tracking-wider text-signal">
           Stage {String(Math.max(current, 0)).padStart(2, "0")} / 07 ·{" "}
           {runningIndex >= 0 ? "Running" : doneCount === STAGES.length ? "Complete" : "Idle"}
@@ -43,7 +47,10 @@ export function PipelineStrip({ states }: { states: StageState[] }) {
                   ? "text-brand"
                   : "text-dim";
           return (
-            <span key={stage} className={`text-center font-mono text-[9px] uppercase tracking-wide ${cls}`}>
+            <span
+              key={stage}
+              className={`text-center font-mono text-[9px] uppercase tracking-wide ${cls}`}
+            >
               {stage}
             </span>
           );

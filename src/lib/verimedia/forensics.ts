@@ -26,7 +26,11 @@ export function ev(
 
 /* ---------------- Image forensics ---------------- */
 
-export function imageForensics(probe: ImageProbe, detectedMime: string, sizeBytes: number): Evidence[] {
+export function imageForensics(
+  probe: ImageProbe,
+  detectedMime: string,
+  sizeBytes: number,
+): Evidence[] {
   const out: Evidence[] = [];
   const mp = (probe.width * probe.height) / 1_000_000;
 
@@ -130,7 +134,11 @@ export function imageForensics(probe: ImageProbe, detectedMime: string, sizeByte
 
 /* ---------------- Audio forensics ---------------- */
 
-export function audioForensics(probe: AudioProbe, detectedMime: string, sizeBytes: number): Evidence[] {
+export function audioForensics(
+  probe: AudioProbe,
+  detectedMime: string,
+  sizeBytes: number,
+): Evidence[] {
   const out: Evidence[] = [];
   const kbps = probe.durationSeconds > 0 ? (sizeBytes * 8) / probe.durationSeconds / 1000 : 0;
 
@@ -234,7 +242,11 @@ export function audioForensics(probe: AudioProbe, detectedMime: string, sizeByte
 
 /* ---------------- Video forensics ---------------- */
 
-export function videoForensics(probe: VideoProbe, detectedMime: string, sizeBytes: number): Evidence[] {
+export function videoForensics(
+  probe: VideoProbe,
+  detectedMime: string,
+  sizeBytes: number,
+): Evidence[] {
   const out: Evidence[] = [];
   const kbps = probe.durationSeconds > 0 ? (sizeBytes * 8) / probe.durationSeconds / 1000 : 0;
 
@@ -338,10 +350,14 @@ export function metadataEvidence(input: {
   }
 
   if (input.software) {
-    const generative = /(stable ?diffusion|midjourney|dall|firefly|sora|runway|comfyui|automatic1111|invokeai|flux|imagen|veo)/i.test(
-      input.software,
-    );
-    const editor = /(photoshop|gimp|lightroom|affinity|capture one|snapseed|premiere|davinci|audacity)/i.test(input.software);
+    const generative =
+      /(stable ?diffusion|midjourney|dall|firefly|sora|runway|comfyui|automatic1111|invokeai|flux|imagen|veo)/i.test(
+        input.software,
+      );
+    const editor =
+      /(photoshop|gimp|lightroom|affinity|capture one|snapseed|premiere|davinci|audacity)/i.test(
+        input.software,
+      );
     out.push(
       ev(
         "metadata",

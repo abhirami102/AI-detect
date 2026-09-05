@@ -2,8 +2,19 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useRef, useState } from "react";
 import { Panel, SectionLabel, SiteFooter, SiteHeader } from "@/components/verimedia/Chrome";
 import { PipelineStrip } from "@/components/verimedia/PipelineStrip";
-import { ACCEPT_ATTRIBUTE, MAX_FILE_BYTES, MAX_VIDEO_SECONDS, SUPPORTED_FORMATS } from "@/lib/verimedia/constants";
-import { AnalysisError, STAGES, fetchRemoteMedia, runAnalysis, type StageState } from "@/lib/verimedia/pipeline";
+import {
+  ACCEPT_ATTRIBUTE,
+  MAX_FILE_BYTES,
+  MAX_VIDEO_SECONDS,
+  SUPPORTED_FORMATS,
+} from "@/lib/verimedia/constants";
+import {
+  AnalysisError,
+  STAGES,
+  fetchRemoteMedia,
+  runAnalysis,
+  type StageState,
+} from "@/lib/verimedia/pipeline";
 import { checkMediaUrl } from "@/lib/verimedia/url-safety";
 
 export const Route = createFileRoute("/analyze")({
@@ -128,7 +139,9 @@ function AnalyzePage() {
               }`}
             >
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 -skew-x-12 bg-brand/10" />
-              <p className="font-display text-base font-extrabold uppercase tracking-wide">Drop media to verify</p>
+              <p className="font-display text-base font-extrabold uppercase tracking-wide">
+                Drop media to verify
+              </p>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-dim">
                 max {MAX_FILE_BYTES / 1024 / 1024}MB · video up to {MAX_VIDEO_SECONDS}s ·{" "}
                 {SUPPORTED_FORMATS.map((f) => f.label).join(" · ")}
@@ -176,14 +189,17 @@ function AnalyzePage() {
                 </button>
               </div>
               <p className="mt-3 font-mono text-[10px] leading-relaxed text-dim">
-                URLs are checked against private, loopback, link-local and cloud-metadata ranges before any request is
-                made. The fetch happens from your browser, so hosts that block cross-origin requests will refuse.
+                URLs are checked against private, loopback, link-local and cloud-metadata ranges
+                before any request is made. The fetch happens from your browser, so hosts that block
+                cross-origin requests will refuse.
               </p>
             </Panel>
 
             {errorTitle ? (
               <Panel className="border-brand p-5">
-                <p className="font-display text-sm font-bold uppercase tracking-wide text-brand">{errorTitle}</p>
+                <p className="font-display text-sm font-bold uppercase tracking-wide text-brand">
+                  {errorTitle}
+                </p>
                 <ul className="mt-2 space-y-1 text-xs leading-relaxed text-dim">
                   {errors.map((e) => (
                     <li key={e}>· {e}</li>
@@ -200,7 +216,11 @@ function AnalyzePage() {
                 <>
                   <div className="mt-3 border border-line bg-background p-3">
                     {file.type.startsWith("image/") && previewUrl ? (
-                      <img src={previewUrl} alt="Selected media preview" className="max-h-64 w-full object-contain" />
+                      <img
+                        src={previewUrl}
+                        alt="Selected media preview"
+                        className="max-h-64 w-full object-contain"
+                      />
                     ) : file.type.startsWith("video/") && previewUrl ? (
                       <video src={previewUrl} controls className="max-h-64 w-full" />
                     ) : previewUrl ? (

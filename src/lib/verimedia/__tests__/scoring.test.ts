@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { NOMINAL_WEIGHTS, aggregateEvidence, calculateScore, explain, riskFromEvidence, verdictFor } from "../scoring";
+import {
+  NOMINAL_WEIGHTS,
+  aggregateEvidence,
+  calculateScore,
+  explain,
+  riskFromEvidence,
+  verdictFor,
+} from "../scoring";
 import type { ComponentResult, Evidence, EvidenceSource, Severity } from "../types";
 
 const evidence = (source: EvidenceSource, severity: Severity, confidence = 0.8): Evidence => ({
@@ -22,7 +29,9 @@ const comp = (over: Partial<ComponentResult> = {}): ComponentResult => ({
   ...over,
 });
 
-const all = (o: Partial<Record<EvidenceSource, ComponentResult>>): Record<EvidenceSource, ComponentResult> => ({
+const all = (
+  o: Partial<Record<EvidenceSource, ComponentResult>>,
+): Record<EvidenceSource, ComponentResult> => ({
   metadata: comp({ status: "unavailable", confidence: 0 }),
   forensics: comp({ status: "unavailable", confidence: 0 }),
   gemini: comp({ status: "unavailable", confidence: 0 }),
@@ -86,7 +95,9 @@ describe("calculateScore", () => {
       gemini: comp({ risk: 90 }),
       web: comp({ risk: 90 }),
     });
-    const partial = calculateScore(all({ metadata: comp({ risk: 90 }), forensics: comp({ risk: 90 }) }));
+    const partial = calculateScore(
+      all({ metadata: comp({ risk: 90 }), forensics: comp({ risk: 90 }) }),
+    );
     expect(partial.syntheticMediaRisk).toBe(full.syntheticMediaRisk);
     expect(partial.confidence).toBeLessThan(full.confidence);
   });

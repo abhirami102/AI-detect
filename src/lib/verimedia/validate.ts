@@ -1,4 +1,11 @@
-import { MAX_FILE_BYTES, MAX_IMAGE_PIXELS, MIN_IMAGE_DIMENSION, MAX_VIDEO_SECONDS, SUPPORTED_FORMATS, formatForMime } from "./constants";
+import {
+  MAX_FILE_BYTES,
+  MAX_IMAGE_PIXELS,
+  MIN_IMAGE_DIMENSION,
+  MAX_VIDEO_SECONDS,
+  SUPPORTED_FORMATS,
+  formatForMime,
+} from "./constants";
 import { detectType } from "./signatures";
 import type { MediaKind } from "./types";
 
@@ -36,7 +43,10 @@ export function extensionOf(name: string): string {
 /** Deterministic, non-guessable storage name derived from a random id. */
 export function secureStorageName(randomId: string, extension: string): string {
   const id = randomId.replace(/[^a-f0-9]/gi, "").slice(0, 32) || "0".repeat(32);
-  const ext = extension.replace(/[^a-z0-9]/gi, "").slice(0, 5).toLowerCase();
+  const ext = extension
+    .replace(/[^a-z0-9]/gi, "")
+    .slice(0, 5)
+    .toLowerCase();
   return ext ? `vm_${id}.${ext}` : `vm_${id}`;
 }
 
@@ -69,7 +79,10 @@ export function validateHeader(input: {
 
   const format = formatForMime(detected.mime);
   if (!format) {
-    issues.push({ field: "signature", message: `Detected ${detected.mime}, which is not supported.` });
+    issues.push({
+      field: "signature",
+      message: `Detected ${detected.mime}, which is not supported.`,
+    });
     return { ok: false, issues, detectedMime: detected.mime, container: detected.container };
   }
 
@@ -84,7 +97,8 @@ export function validateHeader(input: {
   if (input.declaredMime && input.declaredMime !== detected.mime) {
     const declaredIsAlias =
       (detected.mime === "audio/mpeg" && input.declaredMime === "audio/mp3") ||
-      (detected.mime === "audio/mp4" && ["audio/x-m4a", "audio/m4a"].includes(input.declaredMime)) ||
+      (detected.mime === "audio/mp4" &&
+        ["audio/x-m4a", "audio/m4a"].includes(input.declaredMime)) ||
       (detected.mime === "audio/wav" && ["audio/x-wav", "audio/wave"].includes(input.declaredMime));
     if (!declaredIsAlias) {
       issues.push({
@@ -111,10 +125,16 @@ export function validateDimensions(width: number, height: number): ValidationIss
     return issues;
   }
   if (width < MIN_IMAGE_DIMENSION || height < MIN_IMAGE_DIMENSION) {
-    issues.push({ field: "dimensions", message: `Image is smaller than ${MIN_IMAGE_DIMENSION}×${MIN_IMAGE_DIMENSION} px.` });
+    issues.push({
+      field: "dimensions",
+      message: `Image is smaller than ${MIN_IMAGE_DIMENSION}×${MIN_IMAGE_DIMENSION} px.`,
+    });
   }
   if (width * height > MAX_IMAGE_PIXELS) {
-    issues.push({ field: "dimensions", message: "Image exceeds the 100 megapixel processing limit." });
+    issues.push({
+      field: "dimensions",
+      message: "Image exceeds the 100 megapixel processing limit.",
+    });
   }
   return issues;
 }

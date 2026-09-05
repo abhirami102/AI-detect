@@ -15,7 +15,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "VeriMedia AI — Media verification for journalists" },
       {
         property: "og:description",
-        content: "Transparent synthetic-media risk scoring with observation and interpretation kept separate.",
+        content:
+          "Transparent synthetic-media risk scoring with observation and interpretation kept separate.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -49,9 +50,10 @@ function Landing() {
         <div className="mt-10 grid items-end gap-8 md:grid-cols-12">
           <div className="md:col-span-5">
             <p className="text-lg leading-relaxed text-foreground/85">
-              Detect, explain, and document AI-generated or manipulated <span className="text-signal">images</span>,{" "}
-              <span className="text-signal">audio</span>, and <span className="text-signal">video</span> before you
-              trust or share them.
+              Detect, explain, and document AI-generated or manipulated{" "}
+              <span className="text-signal">images</span>,{" "}
+              <span className="text-signal">audio</span>, and{" "}
+              <span className="text-signal">video</span> before you trust or share them.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               {[imageFormats, audioFormats, videoFormats].map((group) => (
@@ -68,7 +70,9 @@ function Landing() {
           <div className="md:col-span-7">
             <div className="clip-notch relative overflow-hidden border-2 border-dashed border-brand/60 bg-panel/40 p-6">
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 -skew-x-12 bg-brand/10" />
-              <p className="font-display text-base font-extrabold uppercase tracking-wide">Drop media to verify</p>
+              <p className="font-display text-base font-extrabold uppercase tracking-wide">
+                Drop media to verify
+              </p>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-dim">
                 or paste a media URL · max 50MB · 120s video
               </p>
@@ -97,7 +101,9 @@ function Landing() {
           {(Object.keys(NOMINAL_WEIGHTS) as Array<keyof typeof NOMINAL_WEIGHTS>).map((source) => (
             <Panel key={source} className="p-5">
               <p className="label-mono">{SOURCE_LABELS[source]}</p>
-              <p className="mt-2 font-display text-3xl font-black">{Math.round(NOMINAL_WEIGHTS[source] * 100)}%</p>
+              <p className="mt-2 font-display text-3xl font-black">
+                {Math.round(NOMINAL_WEIGHTS[source] * 100)}%
+              </p>
               <p className="mt-2 text-xs leading-relaxed text-dim">
                 {source === "metadata"
                   ? "EXIF, container tags, software fields. Missing metadata is never treated as proof of anything."
@@ -116,10 +122,11 @@ function Landing() {
         <SectionLabel>Privacy</SectionLabel>
         <Panel className="p-6">
           <p className="max-w-3xl text-sm leading-relaxed text-dim">
-            Your media is validated, hashed and measured <span className="text-foreground">in your browser</span>. It is
-            never written to cloud storage. When the semantic pass runs, only the file (or a few sampled frames) is sent
-            to the model for that single request, and the report you get back is kept for this browsing session only.
-            Nothing here fabricates a result: any stage that cannot run says{" "}
+            Your media is validated, hashed and measured{" "}
+            <span className="text-foreground">in your browser</span>. It is never written to cloud
+            storage. When the semantic pass runs, only the file (or a few sampled frames) is sent to
+            the model for that single request, and the report you get back is kept for this browsing
+            session only. Nothing here fabricates a result: any stage that cannot run says{" "}
             <span className="text-foreground">Unavailable — not configured</span> instead.
           </p>
         </Panel>

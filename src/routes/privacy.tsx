@@ -12,7 +12,10 @@ export const Route = createFileRoute("/privacy")({
           "What happens to your media: in-browser analysis, session-only reports, no cloud storage, SSRF-protected URL fetching, and strict upload validation.",
       },
       { property: "og:title", content: "Privacy & security — VeriMedia AI" },
-      { property: "og:description", content: "In-browser analysis, session-only reports, no cloud storage." },
+      {
+        property: "og:description",
+        content: "In-browser analysis, session-only reports, no cloud storage.",
+      },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

@@ -43,7 +43,9 @@ export const fetchWebContext = createServerFn({ method: "POST" })
       };
     }
 
-    const json = (await res.json()) as { items?: Array<{ title: string; link: string; snippet: string }> };
+    const json = (await res.json()) as {
+      items?: Array<{ title: string; link: string; snippet: string }>;
+    };
     return {
       status: "ok",
       message: "Search grounding returned source-traceable results.",

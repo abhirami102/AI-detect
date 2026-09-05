@@ -28,7 +28,9 @@ export function EvidenceCard({ evidence }: { evidence: Evidence }) {
         <p className="mt-1.5 font-mono text-[9px] uppercase tracking-wide text-dim">
           Severity {evidence.severity} · Confidence {evidence.confidence.toFixed(2)}
         </p>
-        <p className="mt-1 font-mono text-[9px] leading-relaxed text-dim/70">Limitation: {evidence.limitations}</p>
+        <p className="mt-1 font-mono text-[9px] leading-relaxed text-dim/70">
+          Limitation: {evidence.limitations}
+        </p>
       </div>
     </Panel>
   );
@@ -68,7 +70,10 @@ export function ComponentSection({
       {result.evidence.length ? (
         result.evidence.map((e) => <EvidenceCard key={e.id} evidence={e} />)
       ) : (
-        <UnavailableCard source={source} note={result.note || "No signals recorded for this stage."} />
+        <UnavailableCard
+          source={source}
+          note={result.note || "No signals recorded for this stage."}
+        />
       )}
     </section>
   );

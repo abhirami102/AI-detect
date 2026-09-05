@@ -58,7 +58,8 @@ export function calculateScore(components: Record<EvidenceSource, ComponentResul
   const breakdown: ScoreBreakdownRow[] = ORDER.map((source) => {
     const c = components[source];
     const isOk = c?.status === "ok";
-    const effectiveWeight = isOk && availableWeight > 0 ? NOMINAL_WEIGHTS[source] / availableWeight : 0;
+    const effectiveWeight =
+      isOk && availableWeight > 0 ? NOMINAL_WEIGHTS[source] / availableWeight : 0;
     return {
       source,
       label: SOURCE_LABELS[source],
@@ -76,7 +77,8 @@ export function calculateScore(components: Record<EvidenceSource, ComponentResul
     available.length === 0
       ? 0
       : available.reduce(
-          (sum, s) => sum + (components[s]!.confidence ?? 0) * (NOMINAL_WEIGHTS[s] / availableWeight),
+          (sum, s) =>
+            sum + (components[s]!.confidence ?? 0) * (NOMINAL_WEIGHTS[s] / availableWeight),
           0,
         );
   // Coverage penalty: fewer running components means lower confidence.
@@ -131,8 +133,13 @@ export function aggregateEvidence(components: Record<EvidenceSource, ComponentRe
   );
 }
 
-export function explain(score: ScoreResult, components: Record<EvidenceSource, ComponentResult>): string {
-  const strongest = aggregateEvidence(components).find((e) => e.severity === "high" || e.severity === "moderate");
+export function explain(
+  score: ScoreResult,
+  components: Record<EvidenceSource, ComponentResult>,
+): string {
+  const strongest = aggregateEvidence(components).find(
+    (e) => e.severity === "high" || e.severity === "moderate",
+  );
   const missing = ORDER.filter((s) => components[s]?.status !== "ok").map((s) => SOURCE_LABELS[s]);
 
   const head =

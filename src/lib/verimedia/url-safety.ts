@@ -60,7 +60,10 @@ export function checkMediaUrl(raw: string): UrlCheck {
   }
 
   if (!ALLOWED_PROTOCOLS.has(url.protocol)) {
-    return { ok: false, reason: `Blocked scheme "${url.protocol}". Only http and https are allowed.` };
+    return {
+      ok: false,
+      reason: `Blocked scheme "${url.protocol}". Only http and https are allowed.`,
+    };
   }
   if (url.username || url.password) {
     return { ok: false, reason: "URLs with embedded credentials are refused." };

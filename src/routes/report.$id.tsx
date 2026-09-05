@@ -16,7 +16,10 @@ export const Route = createFileRoute("/report/$id")({
           "A full synthetic-media verification report: risk score, verdict, evidence cards, metadata, forensics, semantic analysis, file hash and stated limitations.",
       },
       { property: "og:title", content: "Verification report — VeriMedia AI" },
-      { property: "og:description", content: "Risk score, evidence and limitations for one analysed file." },
+      {
+        property: "og:description",
+        content: "Risk score, evidence and limitations for one analysed file.",
+      },
       { property: "og:type", content: "article" },
       { name: "robots", content: "noindex" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -56,9 +59,9 @@ function ReportPage() {
           <SectionLabel>Report not found</SectionLabel>
           <Panel className="p-6">
             <p className="text-sm leading-relaxed text-dim">
-              Reports are held for the current browsing session only — media and results are never written to storage.
-              If you reopened this link in a new tab or a new session, the report is gone and the file has to be
-              analysed again.
+              Reports are held for the current browsing session only — media and results are never
+              written to storage. If you reopened this link in a new tab or a new session, the
+              report is gone and the file has to be analysed again.
             </p>
             <Link
               to="/analyze"
@@ -76,9 +79,12 @@ function ReportPage() {
   const { file, score, components } = report;
 
   const exportReport = () => {
-    const blob = new Blob([JSON.stringify(report, (k, v) => (k === "previewDataUrl" ? undefined : v), 2)], {
-      type: "application/json",
-    });
+    const blob = new Blob(
+      [JSON.stringify(report, (k, v) => (k === "previewDataUrl" ? undefined : v), 2)],
+      {
+        type: "application/json",
+      },
+    );
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -94,7 +100,9 @@ function ReportPage() {
       <main className="px-6 pb-4 md:px-10">
         <div className="mb-5 flex flex-wrap items-center gap-3">
           <span className="h-px w-10 bg-signal" />
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-dim">Result · {file.name}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-dim">
+            Result · {file.name}
+          </p>
           <span className="ml-auto flex gap-2">
             <button
               type="button"
@@ -127,7 +135,11 @@ function ReportPage() {
                 <p className="label-mono mb-3">
                   {file.kind === "video" ? "Sampled frame" : "Analysed media"}
                 </p>
-                <img src={report.previewDataUrl} alt="Analysed media" className="w-full object-contain" />
+                <img
+                  src={report.previewDataUrl}
+                  alt="Analysed media"
+                  className="w-full object-contain"
+                />
               </Panel>
             ) : null}
           </div>
@@ -146,7 +158,11 @@ function ReportPage() {
         <div className="mt-14 grid gap-10 lg:grid-cols-2">
           <ComponentSection source="metadata" result={components.metadata} title="Metadata" />
           <ComponentSection source="forensics" result={components.forensics} title="Forensics" />
-          <ComponentSection source="gemini" result={components.gemini} title="Gemini · semantic pass" />
+          <ComponentSection
+            source="gemini"
+            result={components.gemini}
+            title="Gemini · semantic pass"
+          />
           <ComponentSection source="web" result={components.web} title="Web context" />
         </div>
 
@@ -156,8 +172,13 @@ function ReportPage() {
             <Panel className="p-5">
               <dl className="grid gap-x-8 gap-y-2 sm:grid-cols-2">
                 {report.metadataFields.map((f) => (
-                  <div key={`${f.key}-${f.value}`} className="flex justify-between gap-4 border-b border-line pb-1">
-                    <dt className="font-mono text-[10px] uppercase tracking-wide text-dim">{f.key}</dt>
+                  <div
+                    key={`${f.key}-${f.value}`}
+                    className="flex justify-between gap-4 border-b border-line pb-1"
+                  >
+                    <dt className="font-mono text-[10px] uppercase tracking-wide text-dim">
+                      {f.key}
+                    </dt>
                     <dd className="truncate font-mono text-[11px] text-foreground">{f.value}</dd>
                   </div>
                 ))}
@@ -187,7 +208,9 @@ function ReportPage() {
               </div>
               <div className="sm:col-span-2">
                 <p className="label-mono">SHA-256</p>
-                <p className="mt-1 break-all font-mono text-[11px] text-foreground/80">{file.sha256}</p>
+                <p className="mt-1 break-all font-mono text-[11px] text-foreground/80">
+                  {file.sha256}
+                </p>
                 <p className="mt-3 label-mono">Source</p>
                 <p className="mt-1 break-all font-mono text-[11px] text-dim">
                   {report.origin === "url" ? report.sourceLabel : "Local upload"}
@@ -203,8 +226,8 @@ function ReportPage() {
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <Tag tone="signal">Uncertainty notice</Tag>
               <p className="text-xs text-dim">
-                Confidence for this report is {score.confidence.toFixed(2)} out of 1.00. Treat anything below 0.60 as a
-                partial picture.
+                Confidence for this report is {score.confidence.toFixed(2)} out of 1.00. Treat
+                anything below 0.60 as a partial picture.
               </p>
             </div>
             <ul className="space-y-1.5 text-xs leading-relaxed text-dim">

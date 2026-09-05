@@ -165,9 +165,13 @@ function parseJpeg(bytes: Uint8Array): MetadataResult {
     hasExif,
     hasGps,
     software: fields.find((f) => f.key === "Software")?.value,
-    camera: [fields.find((f) => f.key === "Camera make")?.value, fields.find((f) => f.key === "Camera model")?.value]
-      .filter(Boolean)
-      .join(" ") || undefined,
+    camera:
+      [
+        fields.find((f) => f.key === "Camera make")?.value,
+        fields.find((f) => f.key === "Camera model")?.value,
+      ]
+        .filter(Boolean)
+        .join(" ") || undefined,
     createdAt: fields.find((f) => f.key === "Captured (original)")?.value,
     notes,
   };
@@ -190,7 +194,11 @@ function chunksPng(bytes: Uint8Array): MetadataResult {
       const key = readString(view, offset + 8, Math.min(length, 79));
       if (key) textKeys.push(key);
       if (type === "tEXt") {
-        const value = readString(view, offset + 8 + key.length + 1, Math.min(length - key.length - 1, 200));
+        const value = readString(
+          view,
+          offset + 8 + key.length + 1,
+          Math.min(length - key.length - 1, 200),
+        );
         if (value) fields.push({ key: `PNG:${key}`, value });
       }
     }
@@ -249,13 +257,22 @@ function id3Tags(bytes: Uint8Array): MetadataResult {
   fields.push({ key: "ID3 version", value: `2.${view.getUint8(3)}.${view.getUint8(4)}` });
   let offset = 10;
   const end = Math.min(10 + size, bytes.length);
-  const names: Record<string, string> = { TSSE: "Encoder", TENC: "Encoded by", TIT2: "Title", TDRC: "Recorded", TDEN: "Encoding time" };
+  const names: Record<string, string> = {
+    TSSE: "Encoder",
+    TENC: "Encoded by",
+    TIT2: "Title",
+    TDRC: "Recorded",
+    TDEN: "Encoding time",
+  };
   while (offset + 10 <= end) {
     const id = readString(view, offset, 4);
     const frameSize = view.getUint32(offset + 4, false);
     if (!id || frameSize <= 0) break;
     if (names[id]) {
-      fields.push({ key: names[id]!, value: readString(view, offset + 11, Math.min(frameSize - 1, 120)) });
+      fields.push({
+        key: names[id]!,
+        value: readString(view, offset + 11, Math.min(frameSize - 1, 120)),
+      });
     }
     offset += 10 + frameSize;
   }
@@ -318,6 +335,11 @@ export function extractMetadata(bytes: Uint8Array, detectedMime: string): Metada
         return { fields: [], hasExif: false, hasGps: false, notes: ["Unsupported container."] };
     }
   } catch {
-    return { fields: [], hasExif: false, hasGps: false, notes: ["Metadata block could not be parsed."] };
+    return {
+      fields: [],
+      hasExif: false,
+      hasGps: false,
+      notes: ["Metadata block could not be parsed."],
+    };
   }
 }

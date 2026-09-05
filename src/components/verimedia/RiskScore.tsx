@@ -6,9 +6,17 @@ const SEGMENTS = 10;
 export function RiskScore({ score }: { score: ScoreResult }) {
   const filled = Math.round((score.syntheticMediaRisk / 100) * SEGMENTS);
   const toneClass =
-    score.syntheticMediaRisk <= 50 ? "text-ok" : score.syntheticMediaRisk <= 70 ? "text-signal" : "text-brand";
+    score.syntheticMediaRisk <= 50
+      ? "text-ok"
+      : score.syntheticMediaRisk <= 70
+        ? "text-signal"
+        : "text-brand";
   const barClass =
-    score.syntheticMediaRisk <= 50 ? "bg-ok" : score.syntheticMediaRisk <= 70 ? "bg-signal" : "bg-brand";
+    score.syntheticMediaRisk <= 50
+      ? "bg-ok"
+      : score.syntheticMediaRisk <= 70
+        ? "bg-signal"
+        : "bg-brand";
 
   return (
     <Panel className="p-7">
@@ -27,7 +35,11 @@ export function RiskScore({ score }: { score: ScoreResult }) {
         </div>
       </div>
 
-      <div className="mt-5 flex h-3 gap-px" role="img" aria-label={`Risk ${score.syntheticMediaRisk} out of 100`}>
+      <div
+        className="mt-5 flex h-3 gap-px"
+        role="img"
+        aria-label={`Risk ${score.syntheticMediaRisk} out of 100`}
+      >
         {Array.from({ length: SEGMENTS }, (_, i) => (
           <div key={i} className={`flex-1 ${i < filled ? barClass : "bg-line"}`} />
         ))}

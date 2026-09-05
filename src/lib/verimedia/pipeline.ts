@@ -4,7 +4,13 @@ import { extractMetadata } from "./metadata";
 import { audioForensics, ev, imageForensics, metadataEvidence, videoForensics } from "./forensics";
 import { probeAudio, probeImage, probeVideo, readHead, sha256Hex } from "./probe";
 import { aggregateEvidence, calculateScore, explain, riskFromEvidence } from "./scoring";
-import { extensionOf, sanitizeFilename, validateDimensions, validateDuration, validateHeader } from "./validate";
+import {
+  extensionOf,
+  sanitizeFilename,
+  validateDimensions,
+  validateDuration,
+  validateHeader,
+} from "./validate";
 import { newReportId, saveReport } from "./store";
 import type {
   AnalysisReport,
@@ -15,7 +21,15 @@ import type {
   MediaKind,
 } from "./types";
 
-export const STAGES = ["Validate", "Hash", "Metadata", "Forensics", "Gemini", "Web", "Score"] as const;
+export const STAGES = [
+  "Validate",
+  "Hash",
+  "Metadata",
+  "Forensics",
+  "Gemini",
+  "Web",
+  "Score",
+] as const;
 export type Stage = (typeof STAGES)[number];
 export type StageStatus = "pending" | "running" | "done" | "skipped" | "failed";
 
@@ -65,7 +79,10 @@ export async function runAnalysis(
   });
   if (!validation.ok || !validation.kind || !validation.detectedMime) {
     emit("Validate", "failed", "Rejected");
-    throw new AnalysisError("This file did not pass validation.", validation.issues.map((i) => i.message));
+    throw new AnalysisError(
+      "This file did not pass validation.",
+      validation.issues.map((i) => i.message),
+    );
   }
   const kind: MediaKind = validation.kind;
   emit("Validate", "done", `${validation.container} accepted`);
@@ -84,7 +101,9 @@ export async function runAnalysis(
     status: "ok",
     risk: metaScore.risk,
     confidence: metaScore.confidence,
-    note: meta.hasExif ? "Metadata block present and parsed." : "No EXIF block — recorded as neutral.",
+    note: meta.hasExif
+      ? "Metadata block present and parsed."
+      : "No EXIF block — recorded as neutral.",
     evidence: metaEvidence,
   };
   emit("Metadata", "done", `${meta.fields.length} field(s)`);
@@ -110,19 +129,28 @@ export async function runAnalysis(
       const dimIssues = validateDimensions(probe.width, probe.height);
       if (dimIssues.length) {
         emit("Forensics", "failed", "Rejected");
-        throw new AnalysisError("This image did not pass validation.", dimIssues.map((i) => i.message));
+        throw new AnalysisError(
+          "This image did not pass validation.",
+          dimIssues.map((i) => i.message),
+        );
       }
       facts.width = probe.width;
       facts.height = probe.height;
       previewDataUrl = probe.previewDataUrl;
       forensicEvidence = imageForensics(probe, validation.detectedMime, file.size);
-      semanticPayloads = file.size <= MAX_INLINE_BYTES ? [await toBase64(file)] : [await toBase64(probe.previewDataUrl)];
+      semanticPayloads =
+        file.size <= MAX_INLINE_BYTES
+          ? [await toBase64(file)]
+          : [await toBase64(probe.previewDataUrl)];
     } else if (kind === "audio") {
       const probe = await probeAudio(file);
       const durIssues = validateDuration(kind, probe.durationSeconds);
       if (durIssues.length) {
         emit("Forensics", "failed", "Rejected");
-        throw new AnalysisError("This audio did not pass validation.", durIssues.map((i) => i.message));
+        throw new AnalysisError(
+          "This audio did not pass validation.",
+          durIssues.map((i) => i.message),
+        );
       }
       facts.durationSeconds = probe.durationSeconds;
       facts.sampleRate = probe.sampleRate;
@@ -134,7 +162,10 @@ export async function runAnalysis(
       const durIssues = validateDuration(kind, probe.durationSeconds);
       if (durIssues.length) {
         emit("Forensics", "failed", "Rejected");
-        throw new AnalysisError("This video did not pass validation.", durIssues.map((i) => i.message));
+        throw new AnalysisError(
+          "This video did not pass validation.",
+          durIssues.map((i) => i.message),
+        );
       }
       facts.durationSeconds = probe.durationSeconds;
       facts.width = probe.width;
@@ -145,7 +176,9 @@ export async function runAnalysis(
     }
   } catch (error) {
     if (error instanceof AnalysisError) throw error;
-    throw new AnalysisError("The media could not be decoded by this browser.", [(error as Error).message]);
+    throw new AnalysisError("The media could not be decoded by this browser.", [
+      (error as Error).message,
+    ]);
   }
 
   const forensicScore = riskFromEvidence(forensicEvidence);
@@ -237,7 +270,11 @@ export async function runAnalysis(
           };
         })()
       : { status: "unavailable", risk: 0, confidence: 0, note: web.message, evidence: [] };
-  emit("Web", web.status === "ok" ? "done" : "skipped", web.status === "ok" ? `${web.results.length} result(s)` : "Not configured");
+  emit(
+    "Web",
+    web.status === "ok" ? "done" : "skipped",
+    web.status === "ok" ? `${web.results.length} result(s)` : "Not configured",
+  );
 
   /* ---- Score ---- */
   emit("Score", "running", "Aggregating evidence");
@@ -281,7 +318,10 @@ export async function runAnalysis(
 
 export async function fetchRemoteMedia(url: string): Promise<File> {
   const res = await fetch(url, { mode: "cors", redirect: "follow" });
-  if (!res.ok) throw new AnalysisError("The URL could not be fetched.", [`The host returned HTTP ${res.status}.`]);
+  if (!res.ok)
+    throw new AnalysisError("The URL could not be fetched.", [
+      `The host returned HTTP ${res.status}.`,
+    ]);
   const blob = await res.blob();
   const name = sanitizeFilename(new URL(url).pathname.split("/").pop() || "remote-media");
   return new File([blob], name, { type: blob.type });

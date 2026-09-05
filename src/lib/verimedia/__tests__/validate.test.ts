@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { detectType } from "../signatures";
-import { extensionOf, sanitizeFilename, secureStorageName, validateDimensions, validateDuration, validateHeader } from "../validate";
+import {
+  extensionOf,
+  sanitizeFilename,
+  secureStorageName,
+  validateDimensions,
+  validateDuration,
+  validateHeader,
+} from "../validate";
 import { MAX_FILE_BYTES, MAX_VIDEO_SECONDS } from "../constants";
 
 const jpeg = () => new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 16, 0x4a, 0x46, 0x49, 0x46, 0]);
@@ -34,31 +41,56 @@ describe("magic-byte detection", () => {
 
 describe("validateHeader", () => {
   it("accepts a matching jpeg", () => {
-    const r = validateHeader({ head: jpeg(), name: "photo.jpg", declaredMime: "image/jpeg", sizeBytes: 1024 });
+    const r = validateHeader({
+      head: jpeg(),
+      name: "photo.jpg",
+      declaredMime: "image/jpeg",
+      sizeBytes: 1024,
+    });
     expect(r.ok).toBe(true);
     expect(r.detectedMime).toBe("image/jpeg");
   });
 
   it("does not trust the declared MIME type", () => {
-    const r = validateHeader({ head: png(), name: "evil.png", declaredMime: "image/jpeg", sizeBytes: 1024 });
+    const r = validateHeader({
+      head: png(),
+      name: "evil.png",
+      declaredMime: "image/jpeg",
+      sizeBytes: 1024,
+    });
     expect(r.detectedMime).toBe("image/png");
     expect(r.ok).toBe(false);
     expect(r.issues.some((i) => i.field === "mime")).toBe(true);
   });
 
   it("rejects an extension that disagrees with the bytes", () => {
-    const r = validateHeader({ head: png(), name: "photo.jpg", declaredMime: "image/png", sizeBytes: 1024 });
+    const r = validateHeader({
+      head: png(),
+      name: "photo.jpg",
+      declaredMime: "image/png",
+      sizeBytes: 1024,
+    });
     expect(r.ok).toBe(false);
   });
 
   it("rejects oversize files", () => {
-    const r = validateHeader({ head: jpeg(), name: "p.jpg", declaredMime: "image/jpeg", sizeBytes: MAX_FILE_BYTES + 1 });
+    const r = validateHeader({
+      head: jpeg(),
+      name: "p.jpg",
+      declaredMime: "image/jpeg",
+      sizeBytes: MAX_FILE_BYTES + 1,
+    });
     expect(r.ok).toBe(false);
     expect(r.issues.some((i) => /50/.test(i.message))).toBe(true);
   });
 
   it("rejects empty files", () => {
-    const r = validateHeader({ head: jpeg(), name: "p.jpg", declaredMime: "image/jpeg", sizeBytes: 0 });
+    const r = validateHeader({
+      head: jpeg(),
+      name: "p.jpg",
+      declaredMime: "image/jpeg",
+      sizeBytes: 0,
+    });
     expect(r.ok).toBe(false);
   });
 

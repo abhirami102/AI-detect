@@ -39,7 +39,12 @@ export function detectType(bytes: Uint8Array): DetectedType {
   if (ascii(bytes, 0, 4) === "RIFF" && ascii(bytes, 8, 4) === "WAVE") {
     return { mime: "audio/wav", container: "RIFF/WAVE" };
   }
-  if (ascii(bytes, 0, 3) === "ID3" || startsWith(bytes, [0xff, 0xfb]) || startsWith(bytes, [0xff, 0xf3]) || startsWith(bytes, [0xff, 0xf2])) {
+  if (
+    ascii(bytes, 0, 3) === "ID3" ||
+    startsWith(bytes, [0xff, 0xfb]) ||
+    startsWith(bytes, [0xff, 0xf3]) ||
+    startsWith(bytes, [0xff, 0xf2])
+  ) {
     return { mime: "audio/mpeg", container: "MPEG audio" };
   }
   if (startsWith(bytes, [0x1a, 0x45, 0xdf, 0xa3])) {
