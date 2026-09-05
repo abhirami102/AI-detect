@@ -16,8 +16,8 @@ export interface AudioProbe {
   sampleRate?: number;
   channels?: number;
   peakDbfs?: number;
-  silentRatio?: number;
-  clippedRatio?: number;
+  silentRatio?: number | undefined;
+  clippedRatio?: number | undefined;
   decoded: boolean;
 }
 

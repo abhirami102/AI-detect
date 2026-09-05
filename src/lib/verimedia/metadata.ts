@@ -14,9 +14,9 @@ export interface MetadataResult {
   fields: MetadataField[];
   hasExif: boolean;
   hasGps: boolean;
-  software?: string;
-  camera?: string;
-  createdAt?: string;
+  software?: string | undefined;
+  camera?: string | undefined;
+  createdAt?: string | undefined;
   notes: string[];
 }
 

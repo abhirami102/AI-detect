@@ -59,11 +59,11 @@ export interface FileFacts {
   kind: MediaKind;
   extension: string;
   sha256: string;
-  width?: number;
-  height?: number;
-  durationSeconds?: number;
-  sampleRate?: number;
-  channels?: number;
+  width?: number | undefined;
+  height?: number | undefined;
+  durationSeconds?: number | undefined;
+  sampleRate?: number | undefined;
+  channels?: number | undefined;
 }
 
 export interface AnalysisReport {
@@ -78,7 +78,7 @@ export interface AnalysisReport {
   explanation: string;
   metadataFields: Array<{ key: string; value: string }>;
   limitations: string[];
-  previewDataUrl?: string;
+  previewDataUrl?: string | undefined;
 }
 
 export const UNAVAILABLE = "Unavailable — not configured";

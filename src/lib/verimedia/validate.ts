@@ -17,10 +17,10 @@ export interface ValidationIssue {
 export interface FileValidation {
   ok: boolean;
   issues: ValidationIssue[];
-  detectedMime?: string;
-  container?: string;
-  kind?: MediaKind;
-  extension?: string;
+  detectedMime?: string | undefined;
+  container?: string | undefined;
+  kind?: MediaKind | undefined;
+  extension?: string | undefined;
 }
 
 export function sanitizeFilename(name: string): string {
