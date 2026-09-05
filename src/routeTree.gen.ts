@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as MethodRouteImport } from './routes/method'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 
@@ -30,6 +31,11 @@ const MethodRoute = MethodRouteImport.update({
   path: '/method',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/method': typeof MethodRoute
+  '/privacy': typeof PrivacyRoute
   '/reports': typeof ReportsRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/method': typeof MethodRoute
+  '/privacy': typeof PrivacyRoute
   '/reports': typeof ReportsRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -60,21 +68,31 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
   '/method': typeof MethodRoute
+  '/privacy': typeof PrivacyRoute
   '/reports': typeof ReportsRoute
   '/report/$id': typeof ReportIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze' | '/method' | '/reports' | '/report/$id'
+  fullPaths:
+    '/' | '/analyze' | '/method' | '/privacy' | '/reports' | '/report/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze' | '/method' | '/reports' | '/report/$id'
-  id: '__root__' | '/' | '/analyze' | '/method' | '/reports' | '/report/$id'
+  to: '/' | '/analyze' | '/method' | '/privacy' | '/reports' | '/report/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/analyze'
+    | '/method'
+    | '/privacy'
+    | '/reports'
+    | '/report/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyzeRoute: typeof AnalyzeRoute
   MethodRoute: typeof MethodRoute
+  PrivacyRoute: typeof PrivacyRoute
   ReportsRoute: typeof ReportsRoute
   ReportIdRoute: typeof ReportIdRoute
 }
@@ -102,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MethodRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
@@ -123,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyzeRoute: AnalyzeRoute,
   MethodRoute: MethodRoute,
+  PrivacyRoute: PrivacyRoute,
   ReportsRoute: ReportsRoute,
   ReportIdRoute: ReportIdRoute,
 }
