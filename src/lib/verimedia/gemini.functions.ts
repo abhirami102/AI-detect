@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { GoogleGenAI, type Part } from "@google/genai";
 import { z } from "zod";
 
 const inputSchema = z.object({
