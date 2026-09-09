@@ -40,25 +40,24 @@ Return ONLY minified JSON matching:
 {"observations":[{"category":string,"observation":string,"interpretation":string,"severity":"none"|"info"|"low"|"moderate"|"high","confidence":number}],"overallConfidence":number,"limitations":[string]}
 confidence values are 0..1. Return at most 6 observations.`;
 
-const MODEL = "gemini-3.7-flash";
+const MODEL = "google/gemini-3.8-flash";
+const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 export const analyzeWithGemini = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }): Promise<GeminiResponse> => {
-    const apiKey = process.env["GEMINI_API_KEY"];
+    const apiKey = process.env["LOVABLE_API_KEY"];
 
     if (!apiKey) {
       return {
         status: "unavailable",
         message:
-          "Unavailable — not configured. No Gemini API credential is present in this environment.",
+          "Unavailable — not configured. No AI credential is present in this environment.",
         observations: [],
         overallConfidence: 0,
         limitations: ["The semantic analysis stage did not run."],
       };
     }
-
-    const ai = new GoogleGenAI({ apiKey });
 
     const textPrompt = `Analyse this ${data.kind} for signs of synthetic generation or manipulation.
 File facts from the pipeline (already measured, do not re-derive): ${data.fileFacts}
@@ -68,42 +67,66 @@ ${
     : ""
 }`;
 
-    const parts: Part[] = [{ text: textPrompt }];
+    type ContentPart =
+      | { type: "text"; text: string }
+      | { type: "image_url"; image_url: { url: string } }
+      | { type: "input_audio"; input_audio: { data: string; format: string } };
+
+    const parts: ContentPart[] = [{ type: "text", text: textPrompt }];
 
     for (const payload of data.payloads) {
       if (data.kind === "audio") {
-        parts.push({
-          inlineData: {
-            mimeType: data.mime,
-            data: payload,
-          },
-        });
+        const format = data.mime.includes("wav")
+          ? "wav"
+          : data.mime.includes("mp3") || data.mime.includes("mpeg")
+            ? "mp3"
+            : data.mime.split("/")[1] || "mp3";
+        parts.push({ type: "input_audio", input_audio: { data: payload, format } });
       } else {
-        parts.push({
-          inlineData: {
-            mimeType: data.kind === "video" ? "image/jpeg" : data.mime,
-            data: payload,
-          },
-        });
+        const mime = data.kind === "video" ? "image/jpeg" : data.mime;
+        parts.push({ type: "image_url", image_url: { url: `data:${mime};base64,${payload}` } });
       }
     }
 
     try {
-      const response = await ai.models.generateContent({
-        model: MODEL,
-        contents: [
-          {
-            role: "user",
-            parts,
-          },
-        ],
-        config: {
-          systemInstruction: SYSTEM,
-          responseMimeType: "application/json",
+      const res = await fetch(GATEWAY, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Lovable-API-Key": apiKey,
+          "X-Lovable-AIG-SDK": "fetch",
         },
+        body: JSON.stringify({
+          model: MODEL,
+          messages: [
+            { role: "system", content: SYSTEM },
+            { role: "user", content: parts },
+          ],
+          response_format: { type: "json_object" },
+        }),
       });
 
-      const content = response.text ?? "";
+      if (!res.ok) {
+        const detail = await res.text();
+        return {
+          status: res.status === 402 || res.status === 403 ? "unavailable" : "error",
+          message:
+            res.status === 402
+              ? "Unavailable — AI credits are exhausted for this workspace, so semantic analysis did not run."
+              : res.status === 403
+                ? "Unavailable — AI access is blocked by workspace policy, so semantic analysis did not run."
+                : `Semantic analysis failed (HTTP ${res.status}). ${detail.slice(0, 200)}`,
+          model: MODEL,
+          observations: [],
+          overallConfidence: 0,
+          limitations: ["The semantic analysis stage did not run."],
+        };
+      }
+
+      const json = (await res.json()) as {
+        choices?: Array<{ message?: { content?: string } }>;
+      };
+      const content = json.choices?.[0]?.message?.content ?? "";
 
       if (!content.trim()) {
         return {
